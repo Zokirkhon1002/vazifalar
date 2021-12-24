@@ -1,12 +1,26 @@
 const express = require("express");
 const CategoriesRouter = express.Router();
 const Joi = require("joi");
+const mongoose = require("mongoose");
 
 // invoked for any requested passed to this router
 // CategoriesRouter.use(function (req, res, next) {
 //   res.send("It's working");
 //   next();
 // });
+
+const categorySchema = new mongoose.Schema({
+  id: Number,
+  name: {
+    type: String,
+    required: true,
+    minlength: 3,
+    maxlength: 50,
+  },
+  link: String,
+});
+
+const Category = mongoose.model("Category", categorySchema);
 
 const MasalalarToplami = [
   {
@@ -58,83 +72,77 @@ const MasalalarToplami = [
 ];
 
 // categories
-CategoriesRouter.get("/api/categories", (req, res, next) => {
-  res.send(MasalalarToplami);
-  next();
+CategoriesRouter.get("/api/categories", async (req, res) => {
+  const kata = await Category.find().sort("name");
+  res.send(kata);
 });
 
 // post metodi
-CategoriesRouter.post("/api/categories", (req, res, next) => {
+// create metodi
+CategoriesRouter.post("/api/categories", async (req, res) => {
   const { err } = validateMasala(req.body);
   if (err) {
     return res.status(400).send(err.details[0].message);
   }
 
-  const yangiMasalaTopmlari = {
-    id: MasalalarToplami.length + 1,
+  let kategory = new Category({
     name: req.body.name,
-    link: req.body.link,
-  };
-  MasalalarToplami.push(yangiMasalaTopmlari);
-  res.status(201).send(yangiMasalaTopmlari);
-  next();
+    link: req.body.link
+  });
+  kategory = await kategory.save();
+  res.status(201).send(kategory);
 });
-
 
 // id bo'yicha get metodi
-CategoriesRouter.get("/api/categories/:id",(req,res,next)=> {
-    const masalaToplam = MasalalarToplami.find((c) => c.id === Number(req.params.id));
-    if (!masalaToplam) return res.status(404).send("Berilgan IDga teng bo'lgan Masalalar to'plami topilmadi");
+CategoriesRouter.get("/api/categories/:id", async (req, res) => {
+  let katagory = await Category.findById(req.params.id);
+  if (!katagory)
+    return res
+      .status(404)
+      .send("Berilgan IDga teng bo'lgan Masalalar to'plami topilmadi");
 
-    res.send(masalaToplam)
-    next();
+  res.send(katagory);
 });
 
-
-
-
 // put metodi
-CategoriesRouter.put('/api/categories/:id',(req,res, next)=> {
-    const masalaToplam = MasalalarToplami.find((c) => c.id === Number(req.params.id));
-    if (!masalaToplam) return res.status(404).send("Berilgan IDga teng bo'lgan Masalalar to'plami topilmadi");
+// update metod
+CategoriesRouter.put("/api/categories/:id", async (req, res) => {
+  const { err } = validateMasala(req.body);
+  if (err) return res.status(400).send(err.details[0].message);
 
-    const {err} = validateMasala(req.body)
-    if(err) return res.status(400).send(err.details[0].message);
+  let category = await Category.findByIdAndUpdate(
+    req.params.id,
+    { name: req.body.name, link: req.body.lin },
+    { new: true }
+  );
 
-    masalaToplam.name = req.body.name;
-    masalaToplam.link = req.body.link;
-    res.send(masalaToplam)
-    next();
-})
+  if (!category)
+    return res
+      .status(404)
+      .send("Berilgan IDga teng bo'lgan Masalalar toifasi to'plami topilmadi");
 
-
-
+  res.send(category);
+});
 
 // delete metodi
-CategoriesRouter.delete('/api/categories/:id', (req,res,next)=> {
-    const masalaToplam = MasalalarToplami.find((c) => c.id === Number(req.params.id));
-    if (!masalaToplam) return res.status(404).send("Berilgan IDga teng bo'lgan Masalalar to'plami topilmadi");
+CategoriesRouter.delete("/api/categories/:id", async (req, res) => {
+  const category = await Category.findByIdAndRemove(req.params.id)
+  if (!category)
+    return res
+      .status(404)
+      .send("Berilgan IDga teng bo'lgan Masalalar to'plami topilmadi");
 
-    const masalaToplamIndex = MasalalarToplami.indexOf(masalaToplam)
-    MasalalarToplami.splice(masalaToplamIndex,1);
-    res.send(masalaToplam)
-    next();
-})
-
-
-
+  
+  res.send(category);
+});
 
 // validatsiya
 function validateMasala(category) {
-    const CategorySchema = Joi.object({
-      name: Joi.string().required().min(3),
-    });
-  
-    return Joi.validate(category, CategorySchema);
-  }
-  
+  const CategorySchema = Joi.object({
+    name: Joi.string().required().min(3),
+  });
 
-
-
+  return Joi.validate(category, CategorySchema);
+}
 
 module.exports = CategoriesRouter;
