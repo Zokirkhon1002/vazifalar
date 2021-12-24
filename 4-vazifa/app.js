@@ -29,12 +29,6 @@ app.use("/", CategoriesRouter);
 
 
 
-// customers route
-const customersRouter = require("./Routes/customers");
-app.use("/", customersRouter);
-
-
-
 // portga oid
 const port = process.env.PORT || 7000;
 // $env:PORT=5001

@@ -87,7 +87,7 @@ CategoriesRouter.post("/api/categories", async (req, res) => {
 
   let kategory = new Category({
     name: req.body.name,
-    link: req.body.link
+    link: req.body.link,
   });
   kategory = await kategory.save();
   res.status(201).send(kategory);
@@ -126,17 +126,16 @@ CategoriesRouter.put("/api/categories/:id", async (req, res) => {
 
 // delete metodi
 CategoriesRouter.delete("/api/categories/:id", async (req, res) => {
-  const category = await Category.findByIdAndRemove(req.params.id)
+  const category = await Category.findByIdAndRemove(req.params.id);
   if (!category)
     return res
       .status(404)
       .send("Berilgan IDga teng bo'lgan Masalalar to'plami topilmadi");
 
-  
   res.send(category);
 });
 
-// validatsiya
+// validatsiya.
 function validateMasala(category) {
   const CategorySchema = Joi.object({
     name: Joi.string().required().min(3),
