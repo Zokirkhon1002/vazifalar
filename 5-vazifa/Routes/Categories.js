@@ -20,56 +20,9 @@ const categorySchema = new mongoose.Schema({
   link: String,
 });
 
-const Category = mongoose.model("Category", categorySchema);
+const Category = mongoose.model("CategoryBeshinchiVazifa", categorySchema);
 
-const MasalalarToplami = [
-  {
-    id: 1,
-    name: "Begin",
-    link: "https://youtube.com/playlist?list=PL6_0LObBt5ZltsFsYCKPbCbG54W60Qg7N",
-  },
-  {
-    id: 2,
-    name: "Integer",
-    link: "https://youtube.com/playlist?list=PL6_0LObBt5ZkZ6OyhfrbhwHKiDWzqpGfh",
-  },
-  {
-    id: 3,
-    name: "Boolean",
-    link: "https://youtube.com/playlist?list=PL6_0LObBt5Zk6JMhLjxuL7yzUx14B-W_N",
-  },
-  {
-    id: 4,
-    name: "If else",
-    link: "https://youtube.com/playlist?list=PL6_0LObBt5ZmL1mkRv97czibdcVQ8KRVJ",
-  },
-  {
-    id: 5,
-    name: "Switch Case",
-    link: "https://youtube.com/playlist?list=PL6_0LObBt5Zn2QqGVzVkN6ntz1ShH59UV",
-  },
-  {
-    id: 6,
-    name: "For Loop",
-    link: "https://youtube.com/playlist?list=PL6_0LObBt5Zln3l-jeNmMzAv-QCgguFQv",
-  },
-  {
-    id: 7,
-    name: "While",
-    link: "https://youtube.com/playlist?list=PL6_0LObBt5ZlBJI9ooJUGA5xQnOmjY8b1",
-  },
-  { id: 8, name: "Series" },
-  { id: 9, name: "MinMax" },
-  { id: 10, name: "Function Simple" },
-  { id: 11, name: "Array" },
-  { id: 12, name: "String" },
-  { id: 13, name: "Matrix" },
-  { id: 14, name: "File" },
-  { id: 15, name: "Text" },
-  { id: 16, name: "Param" },
-  { id: 17, name: "Recur" },
-  { id: 18, name: "Tanlangan Masalalar" },
-];
+
 
 // categories
 CategoriesRouter.get("/api/categories", async (req, res) => {
@@ -112,7 +65,7 @@ CategoriesRouter.put("/api/categories/:id", async (req, res) => {
 
   let category = await Category.findByIdAndUpdate(
     req.params.id,
-    { name: req.body.name, link: req.body.link },
+    { name: req.body.name, link: req.body.lin },
     { new: true }
   );
 
