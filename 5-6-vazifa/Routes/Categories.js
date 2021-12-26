@@ -1,26 +1,11 @@
 const express = require("express");
 const CategoriesRouter = express.Router();
-const Joi = require("joi");
-const mongoose = require("mongoose");
-
+const {Category, validateMasala} = require("../models/category")
 // invoked for any requested passed to this router
 // CategoriesRouter.use(function (req, res, next) {
 //   res.send("It's working");
 //   next();
 // });
-
-const categorySchema = new mongoose.Schema({
-  id: Number,
-  name: {
-    type: String,
-    required: true,
-    minlength: 3,
-    maxlength: 50,
-  },
-  link: String,
-});
-
-const Category = mongoose.model("CategoryBeshinchiVazifa", categorySchema);
 
 
 
@@ -89,13 +74,5 @@ CategoriesRouter.delete("/api/categories/:id", async (req, res) => {
   res.send(category);
 });
 
-// validatsiya
-function validateMasala(category) {
-  const CategorySchema = Joi.object({
-    name: Joi.string().required().min(3),
-  });
-
-  return Joi.validate(category, CategorySchema);
-}
 
 module.exports = CategoriesRouter;
