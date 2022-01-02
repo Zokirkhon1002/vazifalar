@@ -11,7 +11,11 @@ const {Author, Course, validateCourse} = require("../models/course")
 
 
 
-// categories
+
+
+
+
+// courses users
 CoursesRouter.get("/api/courses/users", async (req, res) => {
     const course = await Author.find().sort("firstName")
     res.send(course);
@@ -104,7 +108,10 @@ CoursesRouter.delete("/api/courses/users/:id", async (req, res) => {
 
 
 
-// categories
+
+
+
+// courses
 CoursesRouter.get("/api/courses", async (req, res) => {
     const course = await Course
     .find()
@@ -172,6 +179,13 @@ CoursesRouter.delete("/api/courses/:id", async (req, res) => {
   
   res.send(course);
 });
+
+
+
+
+
+
+
 
 
 module.exports = CoursesRouter;

@@ -43,4 +43,6 @@ function validateCourse(course) {
 
 exports.Course = Course;
 exports.Author = Author;
+exports.authorSchema = authorSchema;
+exports.courseSchema = courseSchema;
 exports.validateCourse = validateCourse;
